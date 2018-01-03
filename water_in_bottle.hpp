@@ -11,6 +11,7 @@
 #define WATER_IN_BOTTLE_HPP_
 
 #include "water.hpp"
+#include "trapezoidal_map.hpp"
 
 class WaterInBottle {
 private:

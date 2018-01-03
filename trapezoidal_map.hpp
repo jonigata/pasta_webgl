@@ -2,9 +2,9 @@
 
 /*!
 	@file	  trapezoidal_map.hpp
-	@brief	  <æ¦‚è¦>
+	@brief	  <ŠT—v>
 
-	<èª¬æ˜>
+	<à–¾>
 */
 
 #ifndef TRAPEZOIDAL_MAP_HPP_
@@ -13,8 +13,6 @@
 #include <vector>
 #include <set>
 #include <cstdint>
-#include <string>
-#include <fstream>
 // #include "zw/dprintf.hpp"
 
 template <class R, class SegmentProperty>
@@ -38,9 +36,9 @@ public:
         }
 
         bool operator<(const Point& r) const {
-            if (x_ <r.x_) { return true; }
-            if (r.x_ <x_) { return false; }
-            return y_ <r.y_;
+            if (x_ < r.x_) { return true; }
+            if (r.x_ < x_) { return false; }
+            return y_ < r.y_;
         }
 
         R x()const { return x_; }
@@ -100,45 +98,47 @@ public:
         }
 
         bool is_under_point(const Point& p) {
-            // findã‹ã‚‰å‘¼ã°ã‚Œã‚‹é–¢æ•°
+            // find‚©‚çŒÄ‚Î‚ê‚éŠÖ”
 
-            // ä¸Šä¸‹ã¯yè»¸ä¸‹å‘ãã§è€ƒãˆã¦ã„ã‚‹
+            // ã‰º‚Íy²‰ºŒü‚«‚Ål‚¦‚Ä‚¢‚é
 
             if (is_vertical()) {
-                if (p.y()<p1_.y()) { return true; }
-                // ç·šã«ä¹—ã£ã¦ã„ã‚‹å ´åˆã¯false
+                assert(p.x() == p0_.x());
+                if (p.y() < p1_.y()) { return true; }
+                // ü‚Éæ‚Á‚Ä‚¢‚éê‡‚Ífalse TODO: ‚¨‚©‚µ‚­‚È‚¢H
                 return false;
             } else {
                 R sy = calculate_y(p.x());
-                return p.y()<sy;
+                return p.y() < sy;
             }
         }
 
         bool is_under_segment(Segment* s) {
-            // add_segmentã‹ã‚‰å‘¼ã°ã‚Œã‚‹é–¢æ•°
+            // add_segment‚©‚çŒÄ‚Î‚ê‚éŠÖ”
 
-            // ä¸Šä¸‹ã¯yè»¸ä¸‹å‘ãã§è€ƒãˆã¦ã„ã‚‹
+            // ã‰º‚Íy²‰ºŒü‚«‚Ål‚¦‚Ä‚¢‚é
 
+            // TODO: ‚¨‚©‚µ‚­‚È‚¢H
             if (is_vertical()) {
                 if (s->is_vertical()) {
                     if (s->p1().y() <= p0_.y()) { return true; }
-                    assert(p1_.y() <= s->p0().y()); // å¤±æ•—ï¼ç·šåˆ†ãŒé‡ãªã£ã¦ã‚‹
+                    assert(p1_.y() <= s->p0().y()); // ¸”sü•ª‚ªd‚È‚Á‚Ä‚é
                     return false;
                 } else {
                     if (s->p0().y() <= p0_.y()) { return true; }
-                    assert(p1_.y() <= s->p0().y()); // å¤±æ•—ï¼ç·šåˆ†ãŒäº¤å·®ã—ã¦ã‚‹
+                    assert(p1_.y() <= s->p0().y()); // ¸”sü•ª‚ªŒğ·‚µ‚Ä‚é
                     return false;
                 }
             } else {
                 if (s->is_vertical()) {
                     if (s->p1().y() <= p0_.y()) { return true; }
-                    assert(p0_.y() <= s->p0().y()); // å¤±æ•—ï¼ç·šåˆ†ãŒäº¤å·®ã—ã¦ã‚‹
+                    // assert(p0_.y() <= s->p0().y()); // ¸”sü•ª‚ªŒğ·‚µ‚Ä‚é
                     return false;
                 } else {
                     if (p0_ == s->p0()) {
-                        return s->a()<a_;
+                        return s->a() < a_;
                     }
-                    return s->p0().y()<calculate_y(s->p0().x());
+                    return s->p0().y() < calculate_y(s->p0().x());
                 }
             }
         }
@@ -201,7 +201,7 @@ private:
 
         // make VM
     public:
-        virtual void  pass1(int& addr) = 0;
+        virtual void pass1(int& addr) = 0;
         virtual void pass2(char*) = 0;
 
         bool set_addr(int n) {
@@ -222,7 +222,7 @@ private:
 
     class XNode : public Node {
     public:
-        XNode(const Point& p) : car_(NULL), cdr_(NULL), p_(p), Node(7) {}
+        XNode(const Point& p) : car_(NULL), cdr_(NULL), p_(p) {}
         ~XNode() {}
 
         const Point& p() { return p_; }
@@ -312,7 +312,7 @@ private:
         Point p_;
 
     };
-    
+
     class YNode : public Node {
     public:
         YNode(Segment* s) : car_(NULL), cdr_(NULL), s_(s) {}
@@ -646,7 +646,6 @@ private:
 
     };
 
-
 public:
     TrapezoidalMap(
         R bbminx, R bbminy,
@@ -677,16 +676,14 @@ public:
 
         tree_ = glue;
     }
-    ~TrapezoidalMap() {
-        {
+    ~TrapezoidalMap() { {
             Segment* p = segment_chain_;
             while (p) {
                 Segment* q = p->next();
                 delete p;
                 p = q;
             }
-        }
-        {
+        } {
             Node* p = node_chain_;
             while (p) {
                 Node* q = p->next();
@@ -701,7 +698,7 @@ public:
         set_leaf_scores();
     }
 
-    static Point make_point(R x, R y) {
+    Point make_point(R x, R y) const {
         return Point(x, y);
     }
 
@@ -717,15 +714,15 @@ public:
 
         check_validity();
 
-        output_dot("t" + std::to_string(mm)+ ".dot");
+        output_dot("t" + booststd::to_string(mm)+ ".dot");
 #endif
 
         bool swapped = false;
-        if (p1.x()<p0.x()||
-            (p1.x() == p0.x()&& p1.y()<p0.y())) {
+        if (p1.x() < p0.x() || (p1.x() == p0.x() && p1.y() < p0.y())) {
             std::swap(p0, p1);
             swapped = true;
         }
+        assert(p0.x() <= p1.x());
 
         Segment* s = new_segment(p0, p1, swapped, border, property);
 
@@ -946,7 +943,7 @@ public:
         Point& p3,
         int& score) const {
         Leaf* leaf = find_leaf(q);
-        if (!leaf) { return false; } // ç¯„å›²å¤–
+        if (!leaf) { return false; } // ”ÍˆÍŠO
         leaf->calculate_trapezoid(p0, p1, p2, p3);
         score = leaf->score();
 #if 0
@@ -966,7 +963,7 @@ public:
         SegmentProperty& top_segment_property,
         SegmentProperty& bottom_segment_property) const {
         Leaf* leaf = find_leaf(q);
-        if (!leaf) { return false; } // ç¯„å›²å¤–
+        if (!leaf) { return false; } // ”ÍˆÍŠO
         leaf->calculate_trapezoid(p0, p1, p2, p3);
         score = leaf->score();
         top_segment_property = leaf->top->property();
@@ -984,7 +981,7 @@ public:
         SegmentProperty& top_segment_property,
         SegmentProperty& bottom_segment_property) const {
         Leaf* leaf = find_leaf(q);
-        if (!leaf) { return false; } // ç¯„å›²å¤–
+        if (!leaf) { return false; } // ”ÍˆÍŠO
         score = leaf->score();
         top_segment_property = leaf->top->property();
         bottom_segment_property = leaf->bottom->property();
@@ -997,7 +994,7 @@ public:
 
     int get_score(const Point& q) {
         Leaf* leaf = find_leaf(&q);
-        if (!leaf) { return 0; } // ç¯„å›²å¤–
+        if (!leaf) { return 0; } // ”ÍˆÍŠO
         return chase_horizontal(leaf);
     }
 
@@ -1129,8 +1126,8 @@ private:
                         } else if (p->upperright->bottom->a()<0) {
                             p = p->upperright;
                         } else {
-                            //ç·šåˆ†ã¨å®Œå…¨ã«é‡ãªã£ã¦ã„ã‚‹
-                            p = p->upperright; // ã©ã£ã¡ã§ã‚‚ã„ã„
+                            //ü•ª‚ÆŠ®‘S‚Éd‚È‚Á‚Ä‚¢‚é
+                            p = p->upperright; // ‚Ç‚Á‚¿‚Å‚à‚¢‚¢
                         }
                     }
                 }
@@ -1154,7 +1151,7 @@ private:
             R cy =(v[i] + v[i+1])* R(0.5);
             if (cy == v[i] || cy == v[i+1]) { continue; }
 
-            // æœ€å·¦ãƒãƒ¼ãƒ‰
+            // Å¶ƒm[ƒh
             Leaf* leaf = tree_->leftmost(cy);
             assert(!leaf->upperleft);
             assert(!leaf->lowerleft);
@@ -1220,8 +1217,8 @@ private:
                             } else if (p->upperright->bottom->a()<0) {
                                 p = p->upperright;
                             } else {
-                                //ç·šåˆ†ã¨å®Œå…¨ã«é‡ãªã£ã¦ã„ã‚‹
-                                p = p->upperright; // ã©ã£ã¡ã§ã‚‚ã„ã„
+                                //ü•ª‚ÆŠ®‘S‚Éd‚È‚Á‚Ä‚¢‚é
+                                p = p->upperright; // ‚Ç‚Á‚¿‚Å‚à‚¢‚¢
                             }
                         }
                     }
@@ -1321,7 +1318,7 @@ private:
 
     int   lowest_score_;
     int   highest_score_;
-	
+
 };
 
 template < class R, class SegmentProperty >
@@ -1527,19 +1524,19 @@ public:
             return true;
         }
     }
-    
+
     float calc_y(float qx,
                  float p0x, float p0y, float p1x, float p1y,
                  float la, float lb) const {
         if (qx == p0x) {
             return p0y;
-        } else if (qx == p1x) {
-            return p1y;
-        } else {
+        } else if (qx == p1x) { 
+            return p1y; 
+        } else { 
             return la * qx + lb;
         }
     }
-    
+
     template <class OS>
     void generate(OS& os) {
         // header
@@ -1574,7 +1571,7 @@ public:
             os << ind(1)<< " ADDR" <<(p - b)<< ":" << std::endl;
 
             switch (*((int*)p)) {
-                case 0 : /* DebugBreak(); */ break;
+                case 0 : break;
                 case 1:
                     os << ind(2)<< "if (q.x()<float(" << *((float*)(p+4))
                        << ")||" << std::endl;
