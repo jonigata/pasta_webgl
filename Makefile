@@ -5,10 +5,10 @@ DEPS = $(OBJS:.o=.d)
 JSS = pasta_lib.js 
 
 pasta.js: $(OBJS) $(JSS)
-	emcc -std=c++11 --js-library $(JSS) $(OBJS) -o pasta.js --embed-file data -s EXPORTED_FUNCTIONS="['_main','_malloc','_addMouseEvent']" -s ASSERTIONS=2 -s DEMANGLE_SUPPORT=1
+	emcc -std=c++11 --js-library $(JSS) $(OBJS) -o pasta.js --embed-file data -s EXPORTED_FUNCTIONS="['_main','_malloc','_addMouseEvent']" -s ASSERTIONS=2 -s DEMANGLE_SUPPORT=1 -s TOTAL_MEMORY=67108864
 
 .cpp.o:
-	emcc -O3 -MMD -std=c++11 -Wall -Werror $< -o $@
+	emcc -O3 -MMD -std=c++14 -Wall -Werror $< -o $@
 
 clean:
 	rm -f $(OBJS) pasta.js

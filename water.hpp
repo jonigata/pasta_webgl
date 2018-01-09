@@ -17,8 +17,8 @@
 const int HCOUNT    = 40;
 const int VCOUNT    = 20;
 #else
-const int HCOUNT    = 2;
-const int VCOUNT    = 2;
+const int HCOUNT    = 1;
+const int VCOUNT    = 1;
 #endif
 
 #if 0
@@ -34,7 +34,7 @@ const float PRESSURE_BALANCE_COEFFICIENT    = 0.0f;
 const float PRESSURE_REPULSIVE_COEFFICIENT  = 5.0f;
 #else
 const float INITIAL_DISTANCE	   = 10.0f;	// 1cm(10mm)間隔の格子を作る
-const float DT                     = 0.01f;	// 100フレーム/s
+const float DT                     = 0.001f;	// 100フレーム/s
 const float SEARCH_RADIUS          = 50.0f;	// 5cm(50mm)の検索範囲
 const float VISCOSITY              = 1.0f;
 const float DUMPING                = 0.99f;

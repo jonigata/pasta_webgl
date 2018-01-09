@@ -698,7 +698,7 @@ public:
         set_leaf_scores();
     }
 
-    Point make_point(R x, R y) const {
+    static Point make_point(R x, R y) {
         return Point(x, y);
     }
 

@@ -11,40 +11,23 @@
 #define WATER_IN_BOTTLE_HPP_
 
 #include "water.hpp"
-#include "trapezoidal_map.hpp"
+#include "water_constraint_box.hpp"
+#include "water_constraint_tm.hpp"
+#include <memory>
 
 class WaterInBottle {
-private:
-    class Constraint : public IConstraint {
-        const float BOX_WIDTH = 400.0f; // 40cmの箱
-        const float BOX_HEIGHT = 400.0f; // 40cmの箱
-
-    public:
-        Constraint() { case_offset_ = Vector2(0, 0); }
-
-        Vector2 apply(const Vector2& vv) {
-            Vector2 v = vv;
-            float minx = 0 + case_offset_.x;
-            if (v.x < minx) {
-                v.x = minx - (minx - v.x) * 0.80f;
-            }
-            float maxx = BOX_WIDTH + case_offset_.x;
-            if (maxx < v.x) {
-                v.x = maxx + (v.x - maxx) * 0.80f;
-            }
-            float maxy = BOX_HEIGHT + case_offset_.y;
-            if (maxy < v.y) {
-                v.y = maxy + (v.y - maxy) * 0.80f;
-            }
-            return v;
-        }
-
-        Vector2 case_offset_;
-    };
-
 public:
-    WaterInBottle() {
-        water_.set_constraint(&constraint_);
+    WaterInBottle() : tm_(0, 0, 512, 512) {}
+
+    void build(gci::Document<Vector2> doc) {
+        // constraint_ = std::make_unique<WaterConstraint_Box>();
+        
+        gci2pathview::gci_to_trapezoidal_map(doc, tm_);
+        tmm_.init(tm_);
+        constraint_ =
+            std::make_unique<WaterConstraint_TrapezoidalMap>(doc, tmm_);
+
+        water_.set_constraint(constraint_.get());
     }
 
     void update() {
@@ -57,9 +40,16 @@ public:
 
 private:
     Water water_;
-    Constraint constraint_;
-    
     Vector2 case_offset_;
+    std::unique_ptr<IConstraint> constraint_;
+
+private:
+    // Constraint constraint_;
+    
+private:
+    // trapezoidal map constraint
+    TrapezoidalMap<float, SegmentProperty> tm_;
+    TrapezoidalMapMachine<float, SegmentProperty> tmm_;
 
 };
 

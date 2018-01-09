@@ -45,6 +45,8 @@ public:
         gci2pathview::draw_document(doc, pathview_primitives_);
         pathview_->build(512, 512, pathview_primitives_, 0);
 
+        water_.build(doc);
+
         mouse_dispatcher_.add_acceptor(&camera_, 0);
     }
 

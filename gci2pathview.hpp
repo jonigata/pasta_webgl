@@ -120,9 +120,9 @@ void gci_to_trapezoidal_map(
             int index1 = v[(j+1)% v.size()];
 
             // lexicographical compare
-            bool invert = !(points[index0] <points[index1]);
+            bool invert = !(points[index0] < points[index1]);
 
-            if (index1 <index0) { std::swap(index0, index1); }
+            if (index1 < index0) { std::swap(index0, index1); }
             std::pair<int, int> s = std::make_pair(index0, index1);
 
             if (segments.find(s) == segments.end()) {
@@ -149,10 +149,12 @@ void gci_to_trapezoidal_map(
     }
 
     for (const auto& p: segments) {
+#if 0
         dprintf_real(
             "segment adjacent faces: %d, %d\n",
             p.second.upper_cell_index,
             p.second.lower_cell_index);
+#endif
 
         tm.add_segment(
             points[p.first.first],

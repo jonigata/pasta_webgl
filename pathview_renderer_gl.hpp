@@ -64,7 +64,7 @@ private:
     };
 
     Vector mag(int width, int height, const Vector2& v) {
-        return Vector(v.x / width, v.y / height, 0);
+        return Vector(v.x / width, (height - 1 - v.y) / height, 0);
     }
 
 private:

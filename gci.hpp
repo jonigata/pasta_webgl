@@ -2,9 +2,9 @@
 
 /*!
 	@file	  gci.hpp
-	@brief	  <ŠT—v>
+	@brief	  <æ¦‚è¦>
 
-	<à–¾>
+	<èª¬æ˜Ž>
 */
 
 #ifndef GCI_HPP_
@@ -41,7 +41,7 @@ struct Document {
 
 template <class IS, class Vec>
 void read_gci(IS& ifs, Document<Vec>& doc) {
-    // ’¸“_ƒŠƒXƒg
+    // é ‚ç‚¹ãƒªã‚¹ãƒˆ
     int vertex_count;
     ifs >> vertex_count;
     for (int i = 0 ; i < vertex_count ; i++) {
@@ -52,7 +52,7 @@ void read_gci(IS& ifs, Document<Vec>& doc) {
     }
     printf("vertex_count: %d\n", vertex_count);
 
-    // “ü—Íƒ|ƒŠƒSƒ“
+    // å…¥åŠ›ãƒãƒªã‚´ãƒ³
     int input_polygon_count;
     ifs>> input_polygon_count;
     for (int i = 0 ; i < input_polygon_count ; i++) {
@@ -68,7 +68,7 @@ void read_gci(IS& ifs, Document<Vec>& doc) {
     }
     printf("input_polygon_count: %d\n", input_polygon_count);
 
-    // “ü—ÍƒTƒCƒg
+    // å…¥åŠ›ã‚µã‚¤ãƒˆ
     int input_site_count;
     ifs >> input_site_count;
     for (int i = 0 ; i < input_site_count ; i++) {
@@ -87,7 +87,7 @@ void read_gci(IS& ifs, Document<Vec>& doc) {
     }
     printf("input_site_count: %d\n", input_site_count);
 
-    // ƒ{ƒƒmƒCƒZƒ‹EŽOŠpŒ`•ªŠ„
+    // ãƒœãƒ­ãƒŽã‚¤ã‚»ãƒ«ãƒ»ä¸‰è§’å½¢åˆ†å‰²
     int voronoi_cell_count;
     ifs >> voronoi_cell_count;
     for (int i = 0 ; i < voronoi_cell_count ; i++) {
